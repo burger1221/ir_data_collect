@@ -86,9 +86,15 @@ class IrDataResolver:
         cv2.imwrite(visible_img_file_name, v_img_array)
 
         uv_img_byte = base64.b64decode(ir_data_dto['uv_img'])
+
+        x1 = ir_data_dto['x1']
+        x2 = ir_data_dto['x2']
+        y1 = ir_data_dto['y1']
+        y2 = ir_data_dto['y2']
         w = 120
         h = 160
         uv_img_array = np.array(list(uv_img_byte), dtype=np.uint8).reshape((w, h))
+        cv2.rectangle(uv_img_array, (x1, y1), (x2, y2), (0, 0, 255), 1)
         unvisible_img_file_name = self.generate_file_name(box_id, 'u', random_id)
         cv2.imwrite(unvisible_img_file_name, uv_img_array)
 
