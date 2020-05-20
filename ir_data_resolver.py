@@ -112,6 +112,24 @@ class IrDataResolver:
 
         return visible_img_file_name, unvisible_img_file_name, tmp_img_file_name
 
+    def convert_2_core_temp(self, t):
+        if t < 30:
+            ret = t
+        elif 30 <= t < 32:
+            ret = t + 4
+        elif 32 <= t <= 36.5:
+            a = (t - 32) / (36.5 - 32)
+            ret = 36 + a * (37 - 36)
+        elif 36.5 < t < 39.5:
+            ret = t + 0.5
+        else:
+            ret = t
+
+        if 29 < ret < 35.7:
+            b = (ret - 29) / (35.7 - 29)
+            ret = 35.7 + b * (36 - 35.7)
+        return ret
+
     # 解析热成像数据采集mqtt消息
     def ir_data_resolve(self, ir_data):
         ret = {}
@@ -126,9 +144,12 @@ class IrDataResolver:
         ret['y1'] = ir_data['y1']
         ret['y2'] = ir_data['y2']
 
-        ret['bla_o'] = ir_data['bla_o']
-        ret['bla_s'] = ir_data['bla_s']
-        ret['sur_t'] = ir_data['sur_t']
+        bla_o = ir_data['bla_o']
+        bla_s = ir_data['bla_s']
+        sur_t = ir_data['sur_t']
+        ret['bla_o'] = bla_o
+        ret['bla_s'] = bla_s
+        ret['sur_t'] = sur_t
         ret['in_temp'] = ir_data['in_temp']
         # 解析图片文件&解析温度矩阵
         visible_img_file_name, unvisible_img_file_name, tmp_img_file_name = self.save_matrix_2_file(ir_data)
@@ -137,4 +158,11 @@ class IrDataResolver:
         ret['tmp_img_file_name'] = tmp_img_file_name
         # 数据入库
         self.insert_ir_data(ret)
+
+        # 计算体表修正温度
+        sur_t_o  = bla_s - bla_o + sur_t
+        ret["sur_t_o"] = sur_t_o
+        sur_t_2_core = self.convert_2_core_temp(sur_t_o)
+        ret["sur_t_2_core"] = sur_t_2_core
+
         return ret
