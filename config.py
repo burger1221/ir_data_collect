@@ -4,7 +4,7 @@ import logging
 WS_URL = "ws://localhost:8181"
 
 # mysql
-MYSQL_HOST = '172.18.33.200'
+MYSQL_HOST = '127.0.0.1'
 MYSQL_USER = 'root'
 MYSQL_PASSWD = 'ruijie'
 MYSQL_DB_NAME = 'ir'
