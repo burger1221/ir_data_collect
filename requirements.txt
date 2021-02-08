@@ -21,7 +21,7 @@ future==0.18.2
 google-auth==1.11.2
 greenlet==0.4.15
 grpcio==1.27.2
-httplib2==0.17.2
+httplib2==0.19.0
 idna==2.9
 importlib-metadata==1.6.0
 influxdb==5.3.0
